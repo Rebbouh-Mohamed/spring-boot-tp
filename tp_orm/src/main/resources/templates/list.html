@@ -1,0 +1,47 @@
+<!-- src/main/resources/templates/list.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Management App</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { background-color: green; color: white; padding: 10px; }
+        .add-button { background-color: red; color: white; padding: 10px; text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="header">User Management App</div>
+    <!-- ... table des users ... -->
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+<p>Connecté en tant que : <span th:text="${#authentication.principal.username}"></span></p>
+    <h2>List of Users</h2>
+
+    <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" 
+       href="/add" 
+       class="add-button">Add New User</a>
+    <hr/>
+    <hr/>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Actions</th>
+        </tr>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                <a th:href="@{/delete/{id}(id=${user.id})}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
